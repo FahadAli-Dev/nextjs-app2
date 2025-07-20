@@ -3,21 +3,24 @@ import Handler from "./handler.jsx";
 
 export default async function Home({ searchParams }) {
   const searchParam = await searchParams;
-  let search_param = searchParam.category || "mobile-accessories";
-  let response = await fetch(
-    `https://dummyjson.com/products/category/${search_param}`
+  let selectedCategory = searchParam.category || "mobile-accessories";
+  let resPro = await fetch(
+    `https://dummyjson.com/products/category/${selectedCategory}`
   );
-  let data = await response.json();
-  let finalData = data.products;
+  let proData = await resPro.json();
+  let products = proData.products;
 
-  let category = await fetch("https://dummyjson.com/products/categories");
-  let catgor = await category.json();
+  let resCat = await fetch("https://dummyjson.com/products/categories");
+  let categories = await resCat.json();
   return (
     <div>
       <div className="flex justify-between p-[20px]">
         <div className="grid">
           <label className="font-[500] text-[15px]">Choose Category</label>
-          <Handler catgor={catgor} />
+          <Handler
+            categories={categories}
+            selectedCategory={selectedCategory}
+          />
         </div>
         <h1 className="font-[700] text-[30px] flex flex-col justify-center">
           Find Products
@@ -69,7 +72,7 @@ export default async function Home({ searchParams }) {
         </div>
       </div>
       <div className="grid grid-cols-4 gap-[20px] my-[20px] w-[1200px] mx-auto">
-        {finalData.map((item, idx) => {
+        {products.map((item, idx) => {
           return (
             <div
               key={idx}
