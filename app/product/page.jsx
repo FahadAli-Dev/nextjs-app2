@@ -9,8 +9,9 @@ function Home() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
 
-  const selectedCategory = searchParams.get("category") || "mobile-accessories";
-  const selectedSort = searchParams.get("sort") || "all";
+  const selectedCategory =
+    searchParams?.get("category") || "mobile-accessories";
+  const selectedSort = searchParams?.get("sort") || "all";
 
   useEffect(() => {
     async function fetchProducts() {

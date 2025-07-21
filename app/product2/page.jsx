@@ -4,8 +4,8 @@ import Sorts from "./Sorts.jsx";
 
 export default async function Home({ searchParams }) {
   const searchParam = await searchParams;
-  const selectedCategory = searchParam.category || "mobile-accessories";
-  const selectedSort = searchParam.sort || "all";
+  const selectedCategory = searchParam?.category || "mobile-accessories";
+  const selectedSort = searchParam?.sort || "all";
   let resPro = await fetch(
     `https://dummyjson.com/products/category/${selectedCategory}`
   );
