@@ -43,7 +43,7 @@ export default async function Home({ searchParams }) {
           />
         </div>
         <h1 className="font-[700] text-[30px] flex flex-col justify-center">
-          Find Products
+          Find Products (2)
         </h1>
 
         <div className="grid">
