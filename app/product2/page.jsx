@@ -1,9 +1,11 @@
 import Image from "next/image";
-import Handler from "./handler.jsx";
+import Categories from "./categories.jsx";
+import Sorts from "./Sorts.jsx";
 
 export default async function Home({ searchParams }) {
   const searchParam = await searchParams;
-  let selectedCategory = searchParam.category || "mobile-accessories";
+  const selectedCategory = searchParam.category || "mobile-accessories";
+  const selectedSort = searchParam.sort || "all";
   let resPro = await fetch(
     `https://dummyjson.com/products/category/${selectedCategory}`
   );
@@ -12,14 +14,32 @@ export default async function Home({ searchParams }) {
 
   let resCat = await fetch("https://dummyjson.com/products/categories");
   let categories = await resCat.json();
+
+  const sortedProducts = [...products].sort((a, b) => {
+    if (selectedSort == "price-asc") {
+      return a.price - b.price;
+    } else if (selectedSort == "price-desc") {
+      return b.price - a.price;
+    } else if (selectedSort == "customer-rewiew") {
+      return b.rating - a.rating;
+    } else if (selectedSort == "newest-arrivals") {
+      return b.id - a.id;
+    } else if (selectedSort == "best-sellers") {
+      return b.stock - a.stock;
+    } else {
+      return 0;
+    }
+  });
+
   return (
     <div>
       <div className="flex justify-between p-[20px]">
         <div className="grid">
           <label className="font-[500] text-[15px]">Choose Category</label>
-          <Handler
+          <Categories
             categories={categories}
             selectedCategory={selectedCategory}
+            selectedSort={selectedSort}
           />
         </div>
         <h1 className="font-[700] text-[30px] flex flex-col justify-center">
@@ -28,51 +48,14 @@ export default async function Home({ searchParams }) {
 
         <div className="grid">
           <label className="font-[500] text-[15px]">Sort By</label>
-          <select
-            defaultChecked="all"
-            className="bg-[#f0f2f2] rounded-[5px] border-[1px] border-solid border-gray-400 p-[5px] font-bold text-[14px] text-[#565959]"
-          >
-            <option
-              className="font-bold text-[14px] text-[#565959]"
-              value="all"
-            >
-              All
-            </option>
-            <option
-              className="font-bold text-[14px] text-[#565959]"
-              value="low-high"
-            >
-              Price: Low to High
-            </option>
-            <option
-              className="font-bold text-[14px] text-[#565959]"
-              value="high-low"
-            >
-              Price: High to Low
-            </option>
-            <option
-              className="font-bold text-[14px] text-[#565959]"
-              value="customer-rewiew"
-            >
-              Avg. Customer Review
-            </option>
-            <option
-              className="font-bold text-[14px] text-[#565959]"
-              value="newest-arrivals"
-            >
-              Newest Arrivals
-            </option>
-            <option
-              className="font-bold text-[14px] text-[#565959]"
-              value="best-sellers"
-            >
-              Best Sellers
-            </option>
-          </select>
+          <Sorts
+            selectedCategory={selectedCategory}
+            selectedSort={selectedSort}
+          />
         </div>
       </div>
       <div className="grid grid-cols-4 gap-[20px] my-[20px] w-[1200px] mx-auto">
-        {products.map((item, idx) => {
+        {sortedProducts.map((item, idx) => {
           return (
             <div
               key={idx}

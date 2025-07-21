@@ -10,6 +10,7 @@ function Home() {
   const [categories, setCategories] = useState([]);
 
   const selectedCategory = searchParams.get("category") || "mobile-accessories";
+  const selectedSort = searchParams.get("sort") || "all";
 
   useEffect(() => {
     async function fetchProducts() {
@@ -35,8 +36,33 @@ function Home() {
     const newCategory = e.target.value;
     const params = new URLSearchParams(window.location.search);
     params.set("category", newCategory);
+    params.set("sort", selectedSort);
     router.push(`/product?${params.toString()}`);
   };
+
+  const handleSortChange = (e) => {
+    const newSort = e.target.value;
+    const params = new URLSearchParams(window.location.search);
+    params.set("category", selectedCategory);
+    params.set("sort", newSort);
+    router.push(`/product?${params.toString()}`);
+  };
+
+  const sortedProducts = [...products].sort((a, b) => {
+    if (selectedSort == "price-asc") {
+      return a.price - b.price;
+    } else if (selectedSort == "price-desc") {
+      return b.price - a.price;
+    } else if (selectedSort == "customer-rewiew") {
+      return b.rating - a.rating;
+    } else if (selectedSort == "newest-arrivals") {
+      return b.id - a.id;
+    } else if (selectedSort == "best-sellers") {
+      return b.stock - a.stock;
+    } else {
+      return 0;
+    }
+  });
 
   return (
     <div>
@@ -66,7 +92,8 @@ function Home() {
         <div className="grid">
           <label className="font-[500] text-[15px]">Sort By</label>
           <select
-            defaultChecked="all"
+            onChange={handleSortChange}
+            value={selectedSort}
             className="bg-[#f0f2f2] rounded-[5px] border-[1px] border-solid border-gray-400 p-[5px] font-bold text-[14px] text-[#565959]"
           >
             <option
@@ -77,13 +104,13 @@ function Home() {
             </option>
             <option
               className="font-bold text-[14px] text-[#565959]"
-              value="low-high"
+              value="price-asc"
             >
               Price: Low to High
             </option>
             <option
               className="font-bold text-[14px] text-[#565959]"
-              value="high-low"
+              value="price-desc"
             >
               Price: High to Low
             </option>
@@ -109,7 +136,7 @@ function Home() {
         </div>
       </div>
       <div className="grid grid-cols-4 gap-[20px] my-[20px] w-[1200px] mx-auto">
-        {products.map((item, idx) => {
+        {sortedProducts.map((item, idx) => {
           return (
             <div
               key={idx}

@@ -2,13 +2,16 @@
 
 import { useRouter } from "next/navigation";
 
-const Handler = ({ categories, selectedCategory }) => {
+const Categories = ({ categories, selectedCategory, selectedSort }) => {
   const router = useRouter();
   return (
     <select
       value={selectedCategory}
       onChange={(e) => {
-        router.push(`/product2?category=${e.target.value}`);
+        const params = new URLSearchParams(window.location.search);
+        params.set("category", e.target.value);
+        params.set("sort", selectedSort);
+        router.push(`/product2?${params.toString()}`);
       }}
       className="font-bold text-[14px] text-[#565959] border-[1px] border-solid border-gray-400 rounded-[4px] p-[5px]"
     >
@@ -27,4 +30,4 @@ const Handler = ({ categories, selectedCategory }) => {
   );
 };
 
-export default Handler;
+export default Categories;
