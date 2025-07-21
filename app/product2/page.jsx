@@ -4,7 +4,6 @@ import Sorts from "./Sorts.jsx";
 
 export default async function Home({ searchParams }) {
   const searchParam = await searchParams;
-  console.log(searchParam);
 
   const selectedCategory = searchParam?.category || "mobile-accessories";
   const selectedSort = searchParam?.sort || "all";
@@ -13,7 +12,6 @@ export default async function Home({ searchParams }) {
   );
   let proData = await resPro.json();
   let products = proData.products;
-
   let resCat = await fetch("https://dummyjson.com/products/categories");
   let categories = await resCat.json();
 
